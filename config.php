@@ -2,13 +2,17 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-define('APPLICATION_PATH', '/');
+defined('APPLICATION_PATH')
+    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/'));
+
 define('TABLE_STAFF', 'staff');
 
-$path = APPLICATION_PATH . 'library';
-set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-require_once('Zend/Loader/Autoloader.php');
+set_include_path(implode(PATH_SEPARATOR, array(
+    realpath(APPLICATION_PATH . '/library'),
+    get_include_path(),
+)));
 
+require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
 // database configuration
