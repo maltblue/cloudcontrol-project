@@ -1,6 +1,6 @@
 -- database table
 
-DROP TABLE staff;
+DROP TABLE IF EXISTS staff;
 
 -- the staff table
 CREATE TABLE staff (
