@@ -6,10 +6,9 @@
     $result = $db->fetchRow('SELECT * FROM staff WHERE id = ?', $_GET['id']);
 
     $form = getManageForm();
-    $form->setDefaults(array(
-            'id' => $_GET['id']
-        )
-    )->setAction('/edit.php?id='.$_GET['id']);
+    $form->setDefaults((array)$result)
+         ->setAction('/edit.php?id='.$_GET['id']);
+    $form->submit->setLabel('Update User');
 ?>
 
 <div id="container">
