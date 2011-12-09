@@ -1,0 +1,5 @@
+body { margin-left: 15px; }
+
+table { border: 1px solid #555; margin-bottom: 10px; }
+td, tr, th { border: 1px solid #555; padding: 2px 4px 2px 4px; }
+tfoot td { font-size: 85%; font-weight: bold; }
