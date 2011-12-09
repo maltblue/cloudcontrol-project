@@ -1,0 +1,8 @@
+BaseConfig:
+  AdminEmail: matthew@maltblue.com
+
+PHPConfig:
+  apcEnabled: 1
+  xdebugEnable: 1
+  xdebugDefaultEnable: 1
+  xdebugProfilerEnable: 0
