@@ -4,6 +4,13 @@ ini_set('display_errors', 1);
 
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/'));
+    
+
+$applicationEnv = substr($_SERVER['HTTP_HOST'], 0, strpos($_SERVER['HTTP_HOST'], '.'));
+
+// Define application environment
+defined('APPLICATION_ENV')
+    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : $applicationEnv));
 
 define('TABLE_STAFF', 'staff');
 
@@ -16,22 +23,9 @@ require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
 // database configuration
-$options = array(Zend_Db::AUTO_QUOTE_IDENTIFIERS => false);
-$pdoParams = array(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true);
-$config = new Zend_Config(
-    array(
-        'database' => array(
-            'adapter' => 'Pdo_Mysql',
-            'params'  => array(
-                'host'     => '127.0.0.1',
-                'username' => 'dep5jfkw8gf',
-                'password' => 'grSyvSLuShGyHhp',
-                'dbname'   => 'dep5jfkw8gf',
-                'options'  => $options,
-                'driver_options' => $pdoParams,
-            )
-        )
-    )
+$config = new Zend_Config_Ini(
+    APPLICATION_PATH . '/config/application.ini',
+    APPLICATION_ENV
 );
  
 $db = Zend_Db::factory($config->database);
