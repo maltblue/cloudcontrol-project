@@ -22,8 +22,6 @@
         $result = $db->fetchAll($sqlFindAll);
         echo "fetched result from database<br />";
     }
-    
-    var_dump($result);
 ?>
 	<div id="container">
       <header>
