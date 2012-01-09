@@ -37,7 +37,7 @@ $view = new Zend_View();
 
 $manager = new Zend_Cache_Manager;
  
-$dbCache = array(
+/*$dbCache = array(
     'frontend' => array(
         'name' => 'Core',
         'options' => array(
@@ -46,7 +46,7 @@ $dbCache = array(
         )
     ),
     'backend' => array(
-        'name' => 'Memcached',
+        'name' => 'Libmemcached',
         'options' => array(
             'servers' => array(
                 array(
@@ -56,9 +56,15 @@ $dbCache = array(
             )
         ),
     )
-);
+);*/
  
-$manager->setCacheTemplate('database', $dbCache);
+//$manager->setCacheTemplate('database', $dbCache);
+$m = new Memcached();
+$m->setSaslData(
+    $config->memcache->params->username, 
+    $config->memcache->params->password
+);
+$m->addServer($config->memcache->params->hostname, 11211);
 
 function microtime_float()
 {
