@@ -60,6 +60,7 @@ $manager = new Zend_Cache_Manager;
  
 //$manager->setCacheTemplate('database', $dbCache);
 $m = new Memcached();
+$m->setOption(Memcached::OPT_BINARY_PROTOCOL, 1);
 $m->setSaslData(
     $config->memcache->params->username, 
     $config->memcache->params->password
