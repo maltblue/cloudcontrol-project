@@ -31,8 +31,82 @@ $config = new Zend_Config_Ini(
 $db = Zend_Db::factory($config->database);
 $db->getConnection();
 $db->setFetchMode(Zend_Db::FETCH_OBJ);
+$cacheKey = 'listresults';
 
 $view = new Zend_View();
+
+$manager = new Zend_Cache_Manager;
+ 
+$dbCache = array(
+    'frontend' => array(
+        'name' => 'Core',
+        'options' => array(
+            'lifetime' => 7200,
+            'automatic_serialization' => true
+        )
+    ),
+    'backend' => array(
+        'name' => 'Memcached',
+        'options' => array(
+            'servers' => array(
+                array(
+                    'host' => '127.0.0.1',
+                    'persistent' => true,
+                )
+            )
+        ),
+    )
+);
+ 
+$manager->setCacheTemplate('database', $dbCache);
+
+function microtime_float()
+{
+    list($usec, $sec) = explode(" ", microtime());
+    return ((float)$usec + (float)$sec);
+}
+
+$time_start = microtime_float();
+
+function profileQueries($db)
+{
+    $profiler = $db->getProfiler();
+    $queryProfiles = $profiler->getQueryProfiles();
+    $totalTime = 0;
+    $queryCount = 0;
+    $longestTime = 0;
+    $longestQuery = '';
+    
+    foreach ($queryProfiles as $query) {
+        if ($query->getElapsedSecs() > $longestTime) {
+            $totalTime += $query->getElapsedSecs();
+            $queryCount++;
+            $longestTime  = $query->getElapsedSecs();
+            $longestQuery = $query->getQuery();
+        }
+    }
+
+    echo '<br />Executed ' . $queryCount . ' queries in ' . $totalTime .
+         ' seconds' . "<br />";
+    echo 'Average query length: ' . $totalTime / $queryCount .
+         ' seconds' . "<br />";
+    echo 'Queries per second: ' . $queryCount / $totalTime . "<br />";
+    echo 'Longest query length: ' . $longestTime . "<br />";
+    echo "Longest query: <br />" . $longestQuery . "<br />";
+    
+    $profiler->clear();
+}
+
+function clearCache($manager, $cacheKey)
+{
+    if ($manager->hasCache('database')) {
+        $databaseCache = $manager->getCache('database');
+        if (($databaseCache->test($cacheKey)) !== false) {
+            $databaseCache->remove($cacheKey);
+        }
+    }
+    echo "<br />cache cleared<br />";
+}
 
 function getManageForm()
 {

@@ -29,5 +29,12 @@
     <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
   <![endif]-->
   
+  <?php 
+    print profileQueries($db); 
+    $time_end = microtime_float();
+    $executionTime = $time_end - $time_start;
+    echo "<br />Page execution took $executionTime seconds";
+  ?>
+  
 </body>
 </html>

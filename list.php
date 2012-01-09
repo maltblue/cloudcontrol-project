@@ -2,10 +2,23 @@
     require_once('config.php');
     require_once('includes/template.header.php');
     
+    $sqlFindAll = 'SELECT * FROM staff ORDER BY lastName DESC LIMIT 10';
+    
     // find all staff members
-    $result = $db->fetchAll('SELECT * FROM staff ORDER BY lastName DESC LIMIT 10');
+    if ($manager->hasCache('database')) {
+        $databaseCache = $manager->getCache('database');
+        if (($result = $databaseCache->load($cacheKey)) === false) {
+            $result = $db->fetchAll($sqlFindAll);
+            echo "fetched result from database<br />";
+            $databaseCache->save($result, $cacheKey);
+        } else {
+            echo "fetched result from cache<br />";
+        }
+    } else {
+        $result = $db->fetchAll($sqlFindAll);
+        echo "fetched result from database<br />";
+    }
 ?>
-
 	<div id="container">
       <header>
           <h1>Malt Blue / cloudControl :: Staff Manager</h1>
@@ -57,6 +70,4 @@
       </footer>
     </div> <!--! end of #container -->
 
-<?php
-    require_once('includes/template.footer.php');
-?>
+<?php require_once('includes/template.footer.php'); ?>

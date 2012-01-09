@@ -21,6 +21,7 @@
         if (!empty($_POST)) {
             if ($form->isValid($_POST)) {
                 $status = $db->insert('staff', $form->getValues());
+                clearCache($manager, $cacheKey);
                 if ($status) {
                     print 'Creation was successful. <a href="/list.php">View All?</a>';
                 } else {
