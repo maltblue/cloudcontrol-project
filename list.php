@@ -9,8 +9,13 @@
         if (($result = $m->get($cacheKey)) === FALSE) {
             $result = $db->fetchAll($sqlFindAll);
             echo "fetched result from database<br />";
-            $m->set($result, $cacheKey);
+            $m->set($cacheKey, $result);
         } else {
+            if (is_null($result)) {
+                $result = $db->fetchAll($sqlFindAll);
+                echo "fetched result from database<br />";
+                $m->set($cacheKey, $result);
+            }
             echo "fetched result from cache<br />";
         }
     } else {
