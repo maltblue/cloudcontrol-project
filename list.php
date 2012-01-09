@@ -5,12 +5,11 @@
     $sqlFindAll = 'SELECT * FROM staff ORDER BY lastName DESC LIMIT 10';
     
     // find all staff members
-    if ($manager->hasCache('database')) {
-        $databaseCache = $manager->getCache('database');
-        if (($result = $databaseCache->load($cacheKey)) === false) {
+    if ($m) {
+        if (($result = $m->get($cacheKey)) === FALSE) {
             $result = $db->fetchAll($sqlFindAll);
             echo "fetched result from database<br />";
-            $databaseCache->save($result, $cacheKey);
+            $m->set($result, $cacheKey);
         } else {
             echo "fetched result from cache<br />";
         }
